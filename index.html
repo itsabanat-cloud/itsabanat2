@@ -77,24 +77,227 @@ function loadTicker() {
     })
     .catch(error => console.error('خطأ في تحميل شريط الأخبار:', error));
 }
-const galleryImages=[{src:"https://res.cloudinary.com/dar1qf8p7/image/upload/v1774288114/%D8%A7%D9%84%D9%85%D8%A8%D9%86%D9%89_mjhc6a.jpg",caption:"🏫 مبنى المدرسة"},{src:"https://res.cloudinary.com/dar1qf8p7/image/upload/v1774287992/%D8%B5%D9%88%D8%B1%D8%A9_%D9%85%D8%A8%D9%87%D8%AC%D8%A9_cybavn.jpg",caption:"🎉 فعاليات مدرسية"},{src:"https://res.cloudinary.com/dar1qf8p7/image/upload/v1774289447/%D9%83%D8%B12_cmtdqg.jpg",caption:"📚 فصول دراسية"},{src:"https://res.cloudinary.com/dar1qf8p7/image/upload/v1774289276/%D8%B1%D9%8A%D8%A7%D8%B6_%D8%A7%D9%84%D8%A7%D8%B7%D9%81%D8%A7%D9%84_asrxdw.jpg",caption:"🎨 رياض الأطفال"},{src:"https://res.cloudinary.com/dar1qf8p7/image/upload/v1774289341/%D9%85%D8%B9%D9%84%D9%85%D9%88%D9%86_foielb.png",caption:"👨‍🏫 فريق المعلمين"}];
-let currentSlideIndex=0,autoSlideTimer,isPlaying=true,progressInterval,progressWidth=0;
-function buildGallery(){const s=document.getElementById('gallerySlider'),d=document.getElementById('galleryDots');if(!s)return;s.innerHTML='';d.innerHTML='';galleryImages.forEach((img,i)=>{s.innerHTML+=`<div class="gallery-slide ${i===0?'active':''}"><img src="${img.src}" loading="lazy"><div class="gallery-caption">${img.caption}</div></div>`;const dot=document.createElement('div');dot.className=`dot ${i===0?'active':''}`;dot.onclick=()=>goToSlide(i);d.appendChild(dot)});updateCounter()}
-function updateSlider(){document.querySelectorAll('.gallery-slide').forEach((s,i)=>s.classList.toggle('active',i===currentSlideIndex));document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===currentSlideIndex));updateCounter();resetProgress()}
-function updateCounter(){const c=document.getElementById('slideCounter');if(c)c.textContent=`${currentSlideIndex+1} / ${galleryImages.length}`}
-function startProgress(){const b=document.getElementById('progressBar');if(!b)return;progressWidth=0;progressInterval=setInterval(()=>{if(isPlaying){progressWidth+=0.5;if(progressWidth>=100)progressWidth=0;b.style.width=`${progressWidth}%`}},50)}
-function resetProgress(){const b=document.getElementById('progressBar');if(b)b.style.width='0%';clearInterval(progressInterval);startProgress()}
-function nextSlide(){currentSlideIndex=(currentSlideIndex+1)%galleryImages.length;updateSlider();resetAuto()}
-function prevSlide(){currentSlideIndex=(currentSlideIndex-1+galleryImages.length)%galleryImages.length;updateSlider();resetAuto()}
-function goToSlide(i){if(i===currentSlideIndex)return;currentSlideIndex=i;updateSlider();resetAuto()}
-function resetAuto(){clearInterval(autoSlideTimer);isPlaying=true;autoSlideTimer=setInterval(()=>{if(isPlaying)nextSlide()},6000)}
-document.getElementById('galleryContainer')?.addEventListener('mouseenter',()=>isPlaying=false);
-document.getElementById('galleryContainer')?.addEventListener('mouseleave',()=>{isPlaying=true;resetAuto()});
-function startCounters(){document.querySelectorAll('.stat-number').forEach(c=>{const t=+c.dataset.target;let cur=0;const inc=t/50;const u=()=>{if(cur<t){cur+=inc;c.innerText=Math.ceil(cur);setTimeout(u,30)}else c.innerText=t};u()})}
-function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'})}
-window.addEventListener('scroll',()=>{const b=document.querySelector('.back-to-top');window.scrollY>300?b.classList.add('show'):b.classList.remove('show')});
-window.nextSlide=nextSlide;window.prevSlide=prevSlide;window.goToSlide=goToSlide;
-document.addEventListener('DOMContentLoaded',()=>{loadTicker();buildGallery();resetAuto();startProgress();startCounters();document.querySelectorAll('nav ul li a').forEach(link=>{if(link.getAttribute('href')==='index.html'||(link.getAttribute('href')==='#'&&window.location.pathname.endsWith('index.html'))||(window.location.pathname==='/'&&link.getAttribute('href')==='index.html'))link.classList.add('active')})});
+
+// ============================================
+// ✅ تم تنظيم معرض الصور - كل صورة في سطر مستقل
+// ✅ لتعديل أو حذف أو إضافة صورة، فقط قم بتعديل هذا القسم
+// ✅ كل صورة تحتوي على (رابط الصورة - النص التعريفي)
+// ============================================
+const galleryImages = [
+    // الصورة 1
+    {
+        src: "https://res.cloudinary.com/dar1qf8p7/image/upload/v1774288114/%D8%A7%D9%84%D9%85%D8%A8%D9%86%D9%89_mjhc6a.jpg",
+        caption: "🏫 مبنى المدرسة"
+    },
+    
+    // الصورة 2
+    {
+        src: "https://res.cloudinary.com/dar1qf8p7/image/upload/v1774287992/%D8%B5%D9%88%D8%B1%D8%A9_%D9%85%D8%A8%D9%87%D8%AC%D8%A9_cybavn.jpg",
+        caption: "🎉 فعاليات مدرسية"
+    },
+    
+    // الصورة 3
+    {
+        src: "https://res.cloudinary.com/dar1qf8p7/image/upload/v1774289447/%D9%83%D8%B12_cmtdqg.jpg",
+        caption: "📚 فصول دراسية"
+    },
+    
+
+// الصورة 2
+    {
+        src: "https://res.cloudinary.com/dar1qf8p7/image/upload/v1775121899/599707136_1402265001910232_4332550595457639745_n_dtggos.jpg",
+        caption: "🎉 رياض الاطفال"
+    },
+
+// الصورة 2
+    {
+        src: "https://res.cloudinary.com/dar1qf8p7/image/upload/v1775121899/626612776_1442829671187098_6760085392200824628_n_ao3ufr.jpg",
+        caption: "🎉 تكريمات "
+    },
+
+// الصورة 2
+    {
+        src: "https://res.cloudinary.com/dar1qf8p7/image/upload/v1775121898/641284648_1463990135737718_2774566008817175686_n_hullee.jpg",
+        caption: "🎉 معلمات رياض الاطفال "
+    },
+
+// الصورة 2
+    {
+        src: "https://res.cloudinary.com/dar1qf8p7/image/upload/v1775121893/599941393_1402264961910236_62486962156740551_n_lfo8mb.jpg",
+        caption: "🎉 رياض الاطفال "
+    },
+
+// الصورة 2
+    {
+        src: "https://res.cloudinary.com/dar1qf8p7/image/upload/v1775121894/603774352_25369258256072535_2777624409033646060_n_d0phxt.jpg",
+        caption: "🎉 تكريمات"
+    },
+
+// الصورة 2
+    {
+        src: "https://res.cloudinary.com/dar1qf8p7/image/upload/v1775121888/576378843_1368474175289315_5516551055049729650_n_lvmid4.jpg",
+        caption: "🎉 أنشطة مدرسية"
+    },
+
+// الصورة 2
+    {
+        src: "https://res.cloudinary.com/dar1qf8p7/image/upload/v1775121887/583951927_1376895284447204_6988680476413416143_n_k4ttrr.jpg",
+        caption: "🎉 مدرستنا "
+    },
+
+// الصورة 2
+    {
+        src: "https://res.cloudinary.com/dar1qf8p7/image/upload/v1775121877/557421895_1469728271828024_9085241449465565797_n_sfq44o.jpg",
+        caption: "🎉 المركز الاول على مستوى الجمهورية "
+    },
+
+
+// الصورة 2
+    {
+        src: "https://res.cloudinary.com/dar1qf8p7/image/upload/v1775121871/493280021_1198135035656564_7775304818970337216_n_igc397.jpg",
+        caption: "🎉جائزة افضل مدير على مستوى الادارة "
+    },
+
+    // الصورة 4
+    {
+        src: "https://res.cloudinary.com/dar1qf8p7/image/upload/v1774289276/%D8%B1%D9%8A%D8%A7%D8%B6_%D8%A7%D9%84%D8%A7%D8%B7%D9%81%D8%A7%D9%84_asrxdw.jpg",
+        caption: "🎨 رياض الأطفال"
+    },
+    
+    // الصورة 5
+    {
+        src: "https://res.cloudinary.com/dar1qf8p7/image/upload/v1775667330/%D9%85%D8%B9%D9%84%D9%85%D9%8A%D9%86_1_mdszrd.png",
+        caption: "👨‍🏫 فريق المعلمين"
+    }
+    
+    // ✅ لإضافة صورة جديدة، انسخ السطور التالية والصقها هنا:
+    // {
+    //     src: "رابط الصورة الجديدة",
+    //     caption: "النص التعريفي للصورة"
+    // },
+    
+    // ✅ لحذف صورة، قم بحذف السطور الخاصة بها (من { إلى } )
+];
+
+let currentSlideIndex = 0, autoSlideTimer, isPlaying = true, progressInterval, progressWidth = 0;
+
+function buildGallery() {
+    const s = document.getElementById('gallerySlider'), d = document.getElementById('galleryDots');
+    if (!s) return;
+    s.innerHTML = '';
+    d.innerHTML = '';
+    galleryImages.forEach((img, i) => {
+        s.innerHTML += `<div class="gallery-slide ${i === 0 ? 'active' : ''}"><img src="${img.src}" loading="lazy"><div class="gallery-caption">${img.caption}</div></div>`;
+        const dot = document.createElement('div');
+        dot.className = `dot ${i === 0 ? 'active' : ''}`;
+        dot.onclick = () => goToSlide(i);
+        d.appendChild(dot);
+    });
+    updateCounter();
+}
+
+function updateSlider() {
+    document.querySelectorAll('.gallery-slide').forEach((s, i) => s.classList.toggle('active', i === currentSlideIndex));
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === currentSlideIndex));
+    updateCounter();
+    resetProgress();
+}
+
+function updateCounter() {
+    const c = document.getElementById('slideCounter');
+    if (c) c.textContent = `${currentSlideIndex + 1} / ${galleryImages.length}`;
+}
+
+function startProgress() {
+    const b = document.getElementById('progressBar');
+    if (!b) return;
+    progressWidth = 0;
+    progressInterval = setInterval(() => {
+        if (isPlaying) {
+            progressWidth += 0.5;
+            if (progressWidth >= 100) progressWidth = 0;
+            b.style.width = `${progressWidth}%`;
+        }
+    }, 50);
+}
+
+function resetProgress() {
+    const b = document.getElementById('progressBar');
+    if (b) b.style.width = '0%';
+    clearInterval(progressInterval);
+    startProgress();
+}
+
+function nextSlide() {
+    currentSlideIndex = (currentSlideIndex + 1) % galleryImages.length;
+    updateSlider();
+    resetAuto();
+}
+
+function prevSlide() {
+    currentSlideIndex = (currentSlideIndex - 1 + galleryImages.length) % galleryImages.length;
+    updateSlider();
+    resetAuto();
+}
+
+function goToSlide(i) {
+    if (i === currentSlideIndex) return;
+    currentSlideIndex = i;
+    updateSlider();
+    resetAuto();
+}
+
+function resetAuto() {
+    clearInterval(autoSlideTimer);
+    isPlaying = true;
+    autoSlideTimer = setInterval(() => {
+        if (isPlaying) nextSlide();
+    }, 6000);
+}
+
+document.getElementById('galleryContainer')?.addEventListener('mouseenter', () => isPlaying = false);
+document.getElementById('galleryContainer')?.addEventListener('mouseleave', () => { isPlaying = true; resetAuto(); });
+
+function startCounters() {
+    document.querySelectorAll('.stat-number').forEach(c => {
+        const t = +c.dataset.target;
+        let cur = 0;
+        const inc = t / 50;
+        const u = () => {
+            if (cur < t) {
+                cur += inc;
+                c.innerText = Math.ceil(cur);
+                setTimeout(u, 30);
+            } else c.innerText = t;
+        };
+        u();
+    });
+}
+
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+window.addEventListener('scroll', () => {
+    const b = document.querySelector('.back-to-top');
+    window.scrollY > 300 ? b.classList.add('show') : b.classList.remove('show');
+});
+
+window.nextSlide = nextSlide;
+window.prevSlide = prevSlide;
+window.goToSlide = goToSlide;
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadTicker();
+    buildGallery();
+    resetAuto();
+    startProgress();
+    startCounters();
+    document.querySelectorAll('nav ul li a').forEach(link => {
+        if (link.getAttribute('href') === 'index.html' || (link.getAttribute('href') === '#' && window.location.pathname.endsWith('index.html')) || (window.location.pathname === '/' && link.getAttribute('href') === 'index.html'))
+            link.classList.add('active');
+    });
+});
 </script>
 </body>
 </html>
